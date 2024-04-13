@@ -1,28 +1,15 @@
-const Book = ({ x, i, setBookList, bookList, setBook, setIndex, setEdit }) => {
+import "./App.scss";
+
+const Book = ({ book, editBook, deleteBook }) => {
     return (
         <div className="Book">
-            <div
-                onClick={() => {
-                    setBook({ ...x });
-                    setIndex(i);
-                    setEdit(true);
-                }}
-                className="info"
-            >
-                <h2>Title: {x.name}</h2>
-                <h2>Price: ${x.price}</h2>
-                <h2>Cat: {x.category}</h2>
-                <h2>Desc: {x.desc}</h2>
+            <div onClick={editBook} className="info">
+                <h2>Title: {book.name}</h2>
+                <h2>Price: ${book.price}</h2>
+                <h2>Cat: {book.category}</h2>
+                <h2>Desc: {book.desc}</h2>
             </div>
-            <button
-                onClick={() => {
-                    let newList = [...bookList];
-                    newList.splice(i, 1);
-                    setBookList(newList);
-                }}
-            >
-                Delete
-            </button>
+            <button onClick={deleteBook}>Delete</button>
         </div>
     );
 };

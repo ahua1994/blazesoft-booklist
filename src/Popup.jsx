@@ -1,28 +1,41 @@
 import "./App.scss";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addBook, closePopup } from "./store";
 
-const Popup = ({ book, setBook, setOpen, bookList }) => {
-    const addBook = e => {
-        e.preventDefault();
-        bookList.push(book);
-        setBook({ name: "", price: 0, category: "", desc: "" });
-        setOpen(false);
-    };
+const Popup = () => {
+    const dispatch = useDispatch();
+    const [newBook, setNewBook] = useState({ name: "", price: 0, category: "", desc: "" });
+
     const handleChange = e => {
-        setBook({ ...book, [e.target.name]: e.target.value });
+        setNewBook({ ...newBook, [e.target.name]: e.target.value });
     };
+
+    const handleSubmit = e => {
+        e.preventDefault();
+        dispatch(addBook({ book: newBook }));
+        dispatch(closePopup());
+    };
+
     return (
         <div className="Popup">
-            <form onSubmit={addBook}>
-                <span className="x" onClick={() => setOpen(false)}>
+            <form onSubmit={handleSubmit}>
+                <span className="x" onClick={() => dispatch(closePopup())}>
                     X
                 </span>
                 <label>
                     Name
-                    <input onChange={handleChange} required type="text" name="name" value={book.name} />
+                    <input onChange={handleChange} required type="text" name="name" value={newBook.name} />
                 </label>
                 <label>
                     Price
-                    <input onChange={handleChange} required type="number" name="price" value={book.price} />
+                    <input
+                        onChange={handleChange}
+                        required
+                        type="number"
+                        name="price"
+                        value={newBook.price}
+                    />
                 </label>
                 <label>
                     Category
@@ -31,12 +44,12 @@ const Popup = ({ book, setBook, setOpen, bookList }) => {
                         required
                         type="text"
                         name="category"
-                        value={book.category}
+                        value={newBook.category}
                     />
                 </label>
                 <label>
                     Description
-                    <input onChange={handleChange} required type="text" name="desc" value={book.desc} />
+                    <input onChange={handleChange} required type="text" name="desc" value={newBook.desc} />
                 </label>
                 <button type="submit">Submit</button>
             </form>

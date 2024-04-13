@@ -1,30 +1,44 @@
 import "./App.scss";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateBook, closePopup, resetBook } from "./store";
 
-const Edit = ({ book, index, setBookList, bookList, setEdit, setBook }) => {
-    const editBook = e => {
-        e.preventDefault();
-        let newList = [...bookList];
-        newList[index] = { ...book };
-        setBookList(newList);
-        setBook({ name: "", price: 0, category: "", desc: "" });
-        setEdit(false);
-    };
+const Edit = () => {
+    const dispatch = useDispatch();
+    const selectedBook = useSelector(state => state.book.selectedBook);
+
+    const [editedBook, setEditedBook] = useState(selectedBook);
+
     const handleChange = e => {
-        setBook({ ...book, [e.target.name]: e.target.value });
+        setEditedBook({ ...editedBook, [e.target.name]: e.target.value });
     };
+
+    const handleSubmit = e => {
+        e.preventDefault();
+        dispatch(updateBook({ book: editedBook }));
+        dispatch(resetBook());
+        dispatch(closePopup());
+    };
+
     return (
         <div className="Popup">
-            <form onSubmit={editBook}>
-                <span className="x" onClick={() => setEdit(false)}>
+            <form onSubmit={handleSubmit}>
+                <span className="x" onClick={() => dispatch(closePopup())}>
                     X
                 </span>
                 <label>
                     Name
-                    <input onChange={handleChange} required type="text" name="name" value={book.name} />
+                    <input onChange={handleChange} required type="text" name="name" value={editedBook.name} />
                 </label>
                 <label>
                     Price
-                    <input onChange={handleChange} required type="number" name="price" value={book.price} />
+                    <input
+                        onChange={handleChange}
+                        required
+                        type="number"
+                        name="price"
+                        value={editedBook.price}
+                    />
                 </label>
                 <label>
                     Category
@@ -33,12 +47,12 @@ const Edit = ({ book, index, setBookList, bookList, setEdit, setBook }) => {
                         required
                         type="text"
                         name="category"
-                        value={book.category}
+                        value={editedBook.category}
                     />
                 </label>
                 <label>
                     Description
-                    <input onChange={handleChange} required type="text" name="desc" value={book.desc} />
+                    <input onChange={handleChange} required type="text" name="desc" value={editedBook.desc} />
                 </label>
                 <button type="submit">Edit</button>
             </form>
